@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passporta Chatbot Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .chat-widget {
+      width: 360px;
+      height: 560px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e5e7eb;
+    }
+
+    .chat-header {
+      background: #0f172a;
+      color: #fff;
+      padding: 18px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .chat-subheader {
+      font-size: 12px;
+      font-weight: normal;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #f8fafc;
+    }
+
+    .message {
+      margin-bottom: 12px;
+      max-width: 85%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      line-height: 1.4;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+
+    .bot {
+      background: #e2e8f0;
+      color: #111827;
+      border-bottom-left-radius: 4px;
+    }
+
+    .user {
+      background: #0f172a;
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-input-area {
+      display: flex;
+      border-top: 1px solid #e5e7eb;
+      padding: 12px;
+      background: #fff;
+      gap: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .chat-button {
+      background: #0f172a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .suggestions {
+      padding: 0 12px 12px;
+      background: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .suggestion-btn {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-widget">
+    <div class="chat-header">
+      Passporta Assistant
+      <div class="chat-subheader">Demo chatbot for common travel document questions</div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        Hello. I’m the Passporta demo assistant.
+        Ask me about visas, processing times, or how Passporta works.
+      </div>
+    </div>
+
+    <div class="suggestions">
+      <button class="suggestion-btn" onclick="askSuggestion('What is Passporta?')">What is Passporta?</button>
+      <button class="suggestion-btn" onclick="askSuggestion('How long does processing take?')">Processing time</button>
+      <button class="suggestion-btn" onclick="askSuggestion('Do I still need a visa?')">Do I need a visa?</button>
+      <button class="suggestion-btn" onclick="askSuggestion('Is my data secure?')">Data security</button>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="userInput" class="chat-input" placeholder="Type your question..." />
+      <button class="chat-button" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatMessages = document.getElementById("chatMessages");
+    const userInput = document.getElementById("userInput");
+
+    function addMessage(text, sender) {
+      const message = document.createElement("div");
+      message.classList.add("message", sender);
+      message.textContent = text;
+      chatMessages.appendChild(message);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getBotReply(input) {
+      const text = input.toLowerCase();
+
+      if (text.includes("what is passporta")) {
+        return "Passporta is a travel document support platform. It helps travelers understand entry requirements and complete eligible travel document applications more smoothly.";
+      }
+
+      if (text.includes("processing") || text.includes("how long")) {
+        return "Processing times depend on the destination, nationality, and application type. For accurate timing, users should always check the destination-specific information shown during the application flow.";
+      }
+
+      if (text.includes("do i need a visa") || text.includes("visa")) {
+        return "Visa requirements depend on nationality, destination, and purpose of travel. A useful next step is to check the relevant destination page or run the eligibility check on Passporta.";
+      }
+
+      if (text.includes("data") || text.includes("secure") || text.includes("security")) {
+        return "Passporta should present clear information about data handling, document review, and secure submission. For legal and privacy details, users should always be directed to the official privacy policy and terms.";
+      }
+
+      if (text.includes("hello") || text.includes("hi")) {
+        return "Hello. How can I assist you today?";
+      }
+
+      return "This demo bot only answers a few preset questions. In the next version, this can be connected to AI and your real FAQ content.";
+    }
+
+    function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      userInput.value = "";
+
+      setTimeout(() => {
+        const reply = getBotReply(text);
+        addMessage(reply, "bot");
+      }, 400);
+    }
+
+    function askSuggestion(question) {
+      userInput.value = question;
+      sendMessage();
+    }
+
+    userInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
